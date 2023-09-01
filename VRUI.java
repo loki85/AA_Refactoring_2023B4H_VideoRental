@@ -74,13 +74,7 @@ public class VRUI {
 	private void clearRentals() {
 		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
-
-		Customer foundCustomer = vrManager.findCustomer(customerName) ;
-		if ( foundCustomer == null ) {
-			println("No customer found") ;
-		} else {
-			print(vrManager.clearRentals(foundCustomer));
-		}
+		print(vrManager.clearRentals(customerName));
 	}
 
 
@@ -132,7 +126,6 @@ public class VRUI {
 	private void println(String message) {
 		System.out.println(message);
 	}
-	
 
 	// ## wrong method
 	private void rentVideo() {

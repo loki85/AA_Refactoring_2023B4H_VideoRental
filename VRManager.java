@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VRManager {
-
-
-
     private List<Customer> customers = new ArrayList<Customer>() ;
 
     private List<Video> videos = new ArrayList<Video>() ;
@@ -105,10 +102,17 @@ public class VRManager {
         return result;
     }
 
-    String clearRentals(Customer foundCustomer) {
+    String clearRentals(String customerName) {
+        StringBuilder result = new StringBuilder();
+
+        Customer foundCustomer = findCustomer(customerName) ;
+        if ( foundCustomer == null ) {
+            result.append("No customer found" + "\n");
+        }
+
         // ## CQRS
         // ## query
-        StringBuilder result = new StringBuilder("Name: " + foundCustomer.getName() +
+        result.append("Name: " + foundCustomer.getName() +
                 "\tRentals: " + foundCustomer.getRentals().size() + "\n");
         for ( Rental rental: foundCustomer.getRentals() ) {
             result.append("\tTitle: ").append(rental.getVideo().getTitle()).append(" ")
