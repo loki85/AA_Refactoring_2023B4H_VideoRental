@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//refactor starts here
+
 public class Customer {
 	private String name;
 
