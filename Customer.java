@@ -32,62 +32,41 @@ public class Customer {
 
 	}
 
-	// ## Long method (SRP) Feature Envy / Divergent Change
-	// ## method object (report 분리): 는 아직은.
+	// Fix SRP, envy
 	public String getReport() {
-		//## SRP 계산도 하고 display도 함
-		String result = "Customer Report for " + getName() + "\n";
-
-		List<Rental> rentals = getRentals();
+		StringBuilder result = new StringBuilder("Customer Report for " + getName() + "\n");
 
 		double totalCharge = 0;
 		int totalPoint = 0;
 
-		for (Rental each : rentals) {
-			double eachCharge = 0;
-			int eachPoint = 0 ;
-			int daysRented = 0;
+		for (Rental each : getRentals()) {
+			double eachCharge = each.calculateCharge();
+			int eachPoint = each.calculatePoint();
 
-			// Duplication
-			daysRented = each.getDaysRented();
-
-			// ## Type Code 엮어서
-			switch (each.getVideo().getPriceCode()) {
-			case Video.REGULAR:
-				eachCharge += 2;
-				// ## Magic number
-				if (daysRented > 2)
-					eachCharge += (daysRented - 2) * 1.5;
-				break;
-			case Video.NEW_RELEASE:
-				eachCharge = daysRented * 3;
-				break;
-			}
-
-			eachPoint++;
-			// ## each가 rental. feature envy
-			if ((each.getVideo().getPriceCode() == Video.NEW_RELEASE) )
-				eachPoint++;
-
-			if ( daysRented > each.getDaysRentedLimit() )
-				eachPoint -= Math.min(eachPoint, each.getVideo().getLateReturnPointPenalty()) ;
-
-			result += "\t" + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: " + eachCharge
-					+ "\tPoint: " + eachPoint + "\n";
+			result.append(formatRentalInfo(each, eachCharge, eachPoint));
 
 			totalCharge += eachCharge;
-
-			totalPoint += eachPoint ;
+			totalPoint += eachPoint;
 		}
 
-		result += "Total charge: " + totalCharge + "\tTotal Point:" + totalPoint + "\n";
+		result.append("Total charge: ").append(totalCharge).append("\tTotal Point:").append(totalPoint).append("\n");
 
-		if ( totalPoint >= 10 ) {
-			System.out.println("Congrat! You earned one free coupon");
+		displayCoupons(totalPoint);
+
+		return result.toString();
+	}
+
+	private String formatRentalInfo(Rental each, double eachCharge, int eachPoint) {
+		return "\t" + each.getVideo().getTitle() + "\tDays rented: " + each.getDaysRented() + "\tCharge: " + eachCharge
+				+ "\tPoint: " + eachPoint + "\n";
+	}
+
+	private void displayCoupons(int totalPoint) {
+		if (totalPoint >= 10) {
+			System.out.println("Congrats! You earned one free coupon");
 		}
-		if ( totalPoint >= 30 ) {
-			System.out.println("Congrat! You earned two free coupon");
+		if (totalPoint >= 30) {
+			System.out.println("Congrats! You earned two free coupons");
 		}
-		return result ;
 	}
 }

@@ -5,6 +5,11 @@ import java.util.Date;
 public class Rental {
 	//Remove Magic number
 	public static final int MAX_RENTAL_DAYS = 2;
+	private static final int NEW_RELEASE_DAYS_LIMIT = 1;
+	private static final double REGULAR_CHARGE = 2;
+	private static final double EXTRA_CHARGE = 1.5;
+	private static final double NEW_RELEASE_CHARGE = 3;
+
 	private Video video ;
 	//ENUM
 	private RentalStatus status ; // 0 for Rented, 1 for Returned
@@ -73,4 +78,33 @@ public class Rental {
 		daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
 		return daysRented;
 	}
+
+	public double calculateCharge() {
+		double eachCharge = 0;
+
+		int daysRented = getDaysRented();
+		switch (video.getPriceCode()) {
+			case Video.REGULAR:
+				eachCharge += REGULAR_CHARGE;
+				if (daysRented > MAX_RENTAL_DAYS)
+					eachCharge += (daysRented - MAX_RENTAL_DAYS) * EXTRA_CHARGE;
+				break;
+			case Video.NEW_RELEASE:
+				eachCharge = daysRented * NEW_RELEASE_CHARGE;
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid price code");
+		}
+		return eachCharge;
+	}
+
+	public int calculatePoint() {
+		int eachPoint = 0;
+		if ((video.getPriceCode() == Video.NEW_RELEASE))
+			eachPoint++;
+		if (getDaysRented() > getVideoRentLimit(video))
+			eachPoint -= Math.min(eachPoint, video.getLateReturnPointPenalty());
+		return eachPoint;
+	}
+
 }
