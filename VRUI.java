@@ -58,8 +58,8 @@ public class VRUI {
 				case QUIT: quit = true ; break ;
 				case LIST_CUSTOMERS: ui.listCustomers(vrManager.getCustomers()) ; break ;
 				case LIST_VIDEOS: ui.listVideos(vrManager.getVideos()) ; break ;
-				case REGISTER_CUSTOMER: ui.register("customer") ; break ;
-				case REGISTER_VIDEO: ui.register("video") ; break ;
+				case REGISTER_CUSTOMER: ui.registerCustomer() ; break ;
+				case REGISTER_VIDEO: ui.registerVideo(); ; break ;
 				case RENT_VIDEO: ui.rentVideo() ; break ;
 				case RETURN_VIDEO: ui.returnVideo() ; break ;
 				case GET_CUSTOMER_REPORT: ui.getCustomerReport() ; break;
@@ -149,27 +149,23 @@ public class VRUI {
 
 		vrManager.setRentals(foundVideo, foundCustomer);
 	}
+	public void registerCustomer() {
+		println("Enter customer name: ") ;
+		String name = scanner.next();
+		vrManager.registerCustomer(name);
+	}
 
+	public void registerVideo() {
+		println("Enter video title to register: ") ;
+		String title = scanner.next() ;
 
-	// ## SRP 위반 registerCustomer, registerVideo
-	public void register(String object) {
-		if ( object.equals("customer") ) {
-			println("Enter customer name: ") ;
-			String name = scanner.next();
-			vrManager.registerCustomer(name);
-		}
-		else {
-			println("Enter video title to register: ") ;
-			String title = scanner.next() ;
+		println("Enter video type( 1 for VHD, 2 for CD, 3 for DVD ):") ;
+		int videoType = scanner.nextInt();
 
-			println("Enter video type( 1 for VHD, 2 for CD, 3 for DVD ):") ;
-			int videoType = scanner.nextInt();
+		println("Enter price code( 1 for Regular, 2 for New Release ):") ;
+		int priceCode = scanner.nextInt();
 
-			println("Enter price code( 1 for Regular, 2 for New Release ):") ;
-			int priceCode = scanner.nextInt();
-
-			vrManager.registerVideo(title, videoType, priceCode);
-		}
+		vrManager.registerVideo(title, videoType, priceCode);
 	}
 
 	// ## SRP? 일수도 있다 priority 낮음
