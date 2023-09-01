@@ -93,4 +93,15 @@ public class VRManager {
             }
         }
     }
+
+    String getReport(String customerName) {
+        String result;
+        Customer foundCustomer = findCustomer(customerName) ;
+        if ( foundCustomer == null ) {
+            result = "No customer found";
+        } else {
+            result = foundCustomer.getReport() ;
+        }
+        return result;
+    }
 }
