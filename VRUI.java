@@ -54,24 +54,25 @@ public class VRUI {
 		// ## command pattern은 too much
 		while ( ! quit ) {
 			Command command = Command.fromValue(ui.showCommand()) ;
-			switch ( command ) {
-				case QUIT: quit = true ; break ;
-				case LIST_CUSTOMERS: ui.listCustomers(vrManager.getCustomers()) ; break ;
-				case LIST_VIDEOS: ui.listVideos(vrManager.getVideos()) ; break ;
-				case REGISTER_CUSTOMER: ui.registerCustomer() ; break ;
-				case REGISTER_VIDEO: ui.registerVideo(); ; break ;
-				case RENT_VIDEO: ui.rentVideo() ; break ;
-				case RETURN_VIDEO: ui.returnVideo() ; break ;
-				case GET_CUSTOMER_REPORT: ui.getCustomerReport() ; break;
-				case CLEAR_RENTALS: ui.clearRentals() ; break ;
-				case INIT: vrManager.init() ; break ;
-				default: break ;
-			}
+            switch (command) {
+                case QUIT -> quit = true;
+                case LIST_CUSTOMERS -> ui.listCustomers(vrManager.getCustomers());
+                case LIST_VIDEOS -> ui.listVideos(vrManager.getVideos());
+                case REGISTER_CUSTOMER -> ui.registerCustomer();
+                case REGISTER_VIDEO -> ui.registerVideo();
+                case RENT_VIDEO -> ui.rentVideo();
+                case RETURN_VIDEO -> ui.returnVideo();
+                case GET_CUSTOMER_REPORT -> ui.getCustomerReport();
+                case CLEAR_RENTALS -> ui.clearRentals();
+                case INIT -> vrManager.init();
+                default -> {
+                }
+            }
 		}
 		System.out.println("Bye");
 	}
 
-	public void clearRentals() {
+	private void clearRentals() {
 		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 
@@ -87,7 +88,7 @@ public class VRUI {
 	private void print(String message) {
 		System.out.print(message);
 	}
-	public void returnVideo() {
+	private void returnVideo() {
 		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 
@@ -100,7 +101,7 @@ public class VRUI {
 		vrManager.returnVideo(foundCustomer, videoTitle);
 	}
 
-	public void listVideos(List<Video> videos ) {
+	private void listVideos(List<Video> videos ) {
 		println("List of videos");
 
 		for ( Video video: videos ) {
@@ -109,7 +110,7 @@ public class VRUI {
 		println("End of list");
 	}
 
-	public void listCustomers(List<Customer> customers) {
+	private void listCustomers(List<Customer> customers) {
 		println("List of customers");
 		for ( Customer customer: customers ) {
 			println("Name: " + customer.getName() +
@@ -123,7 +124,7 @@ public class VRUI {
 	}
 
 	// ## delegate
-	public void getCustomerReport() {
+	private void getCustomerReport() {
 		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 		println(vrManager.getReport(customerName)) ;
@@ -135,7 +136,7 @@ public class VRUI {
 	
 
 	// ## wrong method
-	public void rentVideo() {
+	private void rentVideo() {
 		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 
@@ -149,13 +150,13 @@ public class VRUI {
 
 		vrManager.setRentals(foundVideo, foundCustomer);
 	}
-	public void registerCustomer() {
+	private void registerCustomer() {
 		println("Enter customer name: ") ;
 		String name = scanner.next();
 		vrManager.registerCustomer(name);
 	}
 
-	public void registerVideo() {
+	private void registerVideo() {
 		println("Enter video title to register: ") ;
 		String title = scanner.next() ;
 
