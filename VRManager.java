@@ -104,4 +104,20 @@ public class VRManager {
         }
         return result;
     }
+
+    String clearRentals(Customer foundCustomer) {
+        // ## CQRS
+        // ## query
+        StringBuilder result = new StringBuilder("Name: " + foundCustomer.getName() +
+                "\tRentals: " + foundCustomer.getRentals().size() + "\n");
+        for ( Rental rental: foundCustomer.getRentals() ) {
+            result.append("\tTitle: ").append(rental.getVideo().getTitle()).append(" ")
+                    .append("\tPrice Code: ").append(rental.getVideo().getPriceCode());
+        }
+
+        // ## command
+        List<Rental> rentals = new ArrayList<Rental>() ;
+        foundCustomer.setRentals(rentals);
+        return result.toString();
+    }
 }
