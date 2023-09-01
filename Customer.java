@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//refactor starts here. ## indicates coursework comment
-
 public class Customer {
 	private String name;
 
@@ -51,13 +49,7 @@ public class Customer {
 			int daysRented = 0;
 
 			// ## Duplication
-			if (each.getStatus() == RentalStatus.RENTED) { // returned Video
-				long diff = each.getReturnDate().getTime() - each.getRentDate().getTime();
-				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-			} else { // not yet returned
-				long diff = new Date().getTime() - each.getRentDate().getTime();
-				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-			}
+			daysRented = each.getDaysRented();
 
 			// ## Type Code 엮어서
 			switch (each.getVideo().getPriceCode()) {

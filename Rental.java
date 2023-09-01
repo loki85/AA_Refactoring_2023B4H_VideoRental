@@ -41,15 +41,8 @@ public class Rental {
 
 	// ## Feature envy / SRP(date/video)
 	public int getDaysRentedLimit() {
-		int limit = getVideoRentLimit(this.video);
-		int daysRented;
-		if (getStatus() == RentalStatus.RETURNED) { // returned Video
-			daysRented = getDaysRented(returnDate.getTime() - rentDate.getTime());
-		} else { // not yet returned
-			daysRented = getDaysRented(new Date().getTime() - rentDate.getTime());
-		}
-		if ( daysRented <= MAX_RENTAL_DAYS) return limit ;
-		return limit;
+		if ( getDaysRented() <= MAX_RENTAL_DAYS) return limit ;
+		else return getVideoRentLimit(this.video);
 	}
 
 	//todo move this function to video
@@ -67,8 +60,14 @@ public class Rental {
 	}
 
 	//Duplicated code
-	private static int getDaysRented(long diff) {
+	public int getDaysRented() {
 		int daysRented;
+		long diff;
+		if (getStatus() == RentalStatus.RETURNED) { // returned Video
+			diff = returnDate.getTime() - rentDate.getTime();
+		} else { // not yet returned
+			diff = new Date().getTime() - rentDate.getTime();
+		}
 		daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
 		return daysRented;
 	}
