@@ -1,11 +1,42 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 //refactor starts here. ## indicates coursework comment
 
 public class VRUI {
+	public enum Command {
+		QUIT(0),
+		LIST_CUSTOMERS(1),
+		LIST_VIDEOS(2),
+		REGISTER_CUSTOMER(3),
+		REGISTER_VIDEO(4),
+		RENT_VIDEO(5),
+		RETURN_VIDEO(6),
+		GET_CUSTOMER_REPORT(7),
+		CLEAR_RENTALS(8),
+		INIT(-1),
+		DEFAULT(-999); // 예외 처리를 위한 기본 값
+
+		private final int value;
+
+		Command(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static Command fromValue(int value) {
+			for (Command command : Command.values()) {
+				if (command.value == value) {
+					return command;
+				}
+			}
+			return DEFAULT; // 지정된 값에 매칭되는 Enum 상수가 없는 경우 기본값 반환
+		}
+	}
 	private static Scanner scanner = new Scanner(System.in) ;
 
 	// ## domain-presentation 섞여 있음 (분리하거나 MVC하거나...)
@@ -22,18 +53,18 @@ public class VRUI {
 		// ## command enum
 		// ## command pattern은 too much
 		while ( ! quit ) {
-			int command = ui.showCommand() ;
+			Command command = Command.fromValue(ui.showCommand()) ;
 			switch ( command ) {
-				case 0: quit = true ; break ;
-				case 1: ui.listCustomers(vrManager.getCustomers()) ; break ;
-				case 2: ui.listVideos(vrManager.getVideos()) ; break ;
-				case 3: ui.register("customer") ; break ;
-				case 4: ui.register("video") ; break ;
-				case 5: ui.rentVideo() ; break ;
-				case 6: ui.returnVideo() ; break ;
-				case 7: ui.getCustomerReport() ; break;
-				case 8: ui.clearRentals() ; break ;
-				case -1: vrManager.init() ; break ;
+				case QUIT: quit = true ; break ;
+				case LIST_CUSTOMERS: ui.listCustomers(vrManager.getCustomers()) ; break ;
+				case LIST_VIDEOS: ui.listVideos(vrManager.getVideos()) ; break ;
+				case REGISTER_CUSTOMER: ui.register("customer") ; break ;
+				case REGISTER_VIDEO: ui.register("video") ; break ;
+				case RENT_VIDEO: ui.rentVideo() ; break ;
+				case RETURN_VIDEO: ui.returnVideo() ; break ;
+				case GET_CUSTOMER_REPORT: ui.getCustomerReport() ; break;
+				case CLEAR_RENTALS: ui.clearRentals() ; break ;
+				case INIT: vrManager.init() ; break ;
 				default: break ;
 			}
 		}
