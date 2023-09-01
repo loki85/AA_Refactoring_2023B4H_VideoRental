@@ -48,7 +48,7 @@ public class Customer {
 			int eachPoint = 0 ;
 			int daysRented = 0;
 
-			// ## Duplication
+			// Duplication
 			daysRented = each.getDaysRented();
 
 			// ## Type Code 엮어서
@@ -75,8 +75,6 @@ public class Customer {
 			result += "\t" + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: " + eachCharge
 					+ "\tPoint: " + eachPoint + "\n";
 
-			// ## 선택. Charge-point 분할
-
 			totalCharge += eachCharge;
 
 			totalPoint += eachPoint ;
@@ -84,7 +82,6 @@ public class Customer {
 
 		result += "Total charge: " + totalCharge + "\tTotal Point:" + totalPoint + "\n";
 
-		// ## 선택. duplication 
 		if ( totalPoint >= 10 ) {
 			System.out.println("Congrat! You earned one free coupon");
 		}

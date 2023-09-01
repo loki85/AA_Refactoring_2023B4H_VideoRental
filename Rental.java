@@ -41,8 +41,10 @@ public class Rental {
 
 	// ## Feature envy / SRP(date/video)
 	public int getDaysRentedLimit() {
-		if ( getDaysRented() <= MAX_RENTAL_DAYS) return limit ;
-		else return getVideoRentLimit(this.video);
+		if ( getDaysRented() <= MAX_RENTAL_DAYS)
+			return 0;
+		else
+			return getVideoRentLimit(this.video);
 	}
 
 	//todo move this function to video
