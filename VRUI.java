@@ -173,7 +173,7 @@ public class VRUI {
 	}
 
 	// ## SRP? 일수도 있다 priority 낮음
-	public int showCommand() {
+	private int showCommand() {
 		println("\nSelect a command !");
 		println("\t 0. Quit");
 		println("\t 1. List customers");
@@ -185,9 +185,6 @@ public class VRUI {
 		println("\t 7. Show customer report");
 		println("\t 8. Show customer and clear rentals");
 
-		int command = scanner.nextInt() ;
-
-		return command ;
-
+        return scanner.nextInt();
 	}
 }
