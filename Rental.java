@@ -39,11 +39,6 @@ public class Rental {
 		return rentDate;
 	}
 
-	// ## Dead Code
-	public void setRentDate(Date rentDate) {
-		this.rentDate = rentDate;
-	}
-
 	public Date getReturnDate() {
 		return returnDate;
 	}
