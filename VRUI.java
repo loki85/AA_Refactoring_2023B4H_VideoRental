@@ -54,20 +54,19 @@ public class VRUI {
 		// ## command pattern은 too much
 		while ( ! quit ) {
 			Command command = Command.fromValue(ui.showCommand()) ;
-            switch (command) {
-                case QUIT -> quit = true;
-                case LIST_CUSTOMERS -> ui.listCustomers(vrManager.getCustomers());
-                case LIST_VIDEOS -> ui.listVideos(vrManager.getVideos());
-                case REGISTER_CUSTOMER -> ui.registerCustomer();
-                case REGISTER_VIDEO -> ui.registerVideo();
-                case RENT_VIDEO -> ui.rentVideo();
-                case RETURN_VIDEO -> ui.returnVideo();
-                case GET_CUSTOMER_REPORT -> ui.getCustomerReport();
-                case CLEAR_RENTALS -> ui.clearRentals();
-                case INIT -> vrManager.init();
-                default -> {
-                }
-            }
+			switch ( command ) {
+				case QUIT: quit = true ; break ;
+				case LIST_CUSTOMERS: ui.listCustomers(vrManager.getCustomers()) ; break ;
+				case LIST_VIDEOS: ui.listVideos(vrManager.getVideos()) ; break ;
+				case REGISTER_CUSTOMER: ui.registerCustomer() ; break ;
+				case REGISTER_VIDEO: ui.registerVideo(); ; break ;
+				case RENT_VIDEO: ui.rentVideo() ; break ;
+				case RETURN_VIDEO: ui.returnVideo() ; break ;
+				case GET_CUSTOMER_REPORT: ui.getCustomerReport() ; break;
+				case CLEAR_RENTALS: ui.clearRentals() ; break ;
+				case INIT: vrManager.init() ; break ;
+				default: break ;
+			}
 		}
 		System.out.println("Bye");
 	}
