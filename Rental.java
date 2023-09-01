@@ -5,7 +5,6 @@ import java.util.Date;
 public class Rental {
 	//Remove Magic number
 	public static final int MAX_RENTAL_DAYS = 2;
-	private static final int NEW_RELEASE_DAYS_LIMIT = 1;
 	private static final double REGULAR_CHARGE = 2;
 	private static final double EXTRA_CHARGE = 1.5;
 	private static final double NEW_RELEASE_CHARGE = 3;
