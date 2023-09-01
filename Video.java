@@ -21,7 +21,6 @@ public class Video {
 	private Date registeredDate ;
 	private boolean rented ;
 
-	// ## long method는 아닐듯
 	public Video(String title, int videoType, int priceCode, Date registeredDate) {
 		this.setTitle(title) ;
 		this.setVideoType(videoType) ;
@@ -36,6 +35,7 @@ public class Video {
 			case VHS: pentalty = 1 ; break ;
 			case CD: pentalty = 2 ; break ;
 			case DVD: pentalty = 3 ; break ;
+			default:break;
 		}
 		return pentalty ;
 	}
@@ -62,16 +62,6 @@ public class Video {
 	// ## IsRented 우선순위 하
 	public void setRented(boolean rented) {
 		this.rented = rented;
-	}
-
-	// ## dead code
-	public Date getRegisteredDate() {
-		return registeredDate;
-	}
-
-	// ## dead code
-	public void setRegisteredDate(Date registeredDate) {
-		this.registeredDate = registeredDate;
 	}
 
 	public int getVideoType() {

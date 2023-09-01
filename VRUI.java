@@ -1,11 +1,42 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 //refactor starts here. ## indicates coursework comment
 
 public class VRUI {
+	public enum Command {
+		QUIT(0),
+		LIST_CUSTOMERS(1),
+		LIST_VIDEOS(2),
+		REGISTER_CUSTOMER(3),
+		REGISTER_VIDEO(4),
+		RENT_VIDEO(5),
+		RETURN_VIDEO(6),
+		GET_CUSTOMER_REPORT(7),
+		CLEAR_RENTALS(8),
+		INIT(-1),
+		DEFAULT(-999); // 예외 처리를 위한 기본 값
+
+		private final int value;
+
+		Command(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static Command fromValue(int value) {
+			for (Command command : Command.values()) {
+				if (command.value == value) {
+					return command;
+				}
+			}
+			return DEFAULT; // 지정된 값에 매칭되는 Enum 상수가 없는 경우 기본값 반환
+		}
+	}
 	private static Scanner scanner = new Scanner(System.in) ;
 
 	// ## domain-presentation 섞여 있음 (분리하거나 MVC하거나...)
@@ -22,18 +53,18 @@ public class VRUI {
 		// ## command enum
 		// ## command pattern은 too much
 		while ( ! quit ) {
-			int command = ui.showCommand() ;
+			Command command = Command.fromValue(ui.showCommand()) ;
 			switch ( command ) {
-				case 0: quit = true ; break ;
-				case 1: ui.listCustomers(vrManager.getCustomers()) ; break ;
-				case 2: ui.listVideos(vrManager.getVideos()) ; break ;
-				case 3: ui.register("customer") ; break ;
-				case 4: ui.register("video") ; break ;
-				case 5: ui.rentVideo() ; break ;
-				case 6: ui.returnVideo() ; break ;
-				case 7: ui.getCustomerReport() ; break;
-				case 8: ui.clearRentals() ; break ;
-				case -1: vrManager.init() ; break ;
+				case QUIT: quit = true ; break ;
+				case LIST_CUSTOMERS: ui.listCustomers(vrManager.getCustomers()) ; break ;
+				case LIST_VIDEOS: ui.listVideos(vrManager.getVideos()) ; break ;
+				case REGISTER_CUSTOMER: ui.register("customer") ; break ;
+				case REGISTER_VIDEO: ui.register("video") ; break ;
+				case RENT_VIDEO: ui.rentVideo() ; break ;
+				case RETURN_VIDEO: ui.returnVideo() ; break ;
+				case GET_CUSTOMER_REPORT: ui.getCustomerReport() ; break;
+				case CLEAR_RENTALS: ui.clearRentals() ; break ;
+				case INIT: vrManager.init() ; break ;
 				default: break ;
 			}
 		}
@@ -41,86 +72,77 @@ public class VRUI {
 	}
 
 	public void clearRentals() {
-		System.out.println("Enter customer name: ") ;
+		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
-		// ## Duplication
-		Customer foundCustomer = vrManager.findCustomer(customerName) ;
 
+		Customer foundCustomer = vrManager.findCustomer(customerName) ;
 		if ( foundCustomer == null ) {
-			System.out.println("No customer found") ;
+			println("No customer found") ;
 		} else {
-			// ## CQRS
-			// ## query
-			System.out.println("Name: " + foundCustomer.getName() +
-					"\tRentals: " + foundCustomer.getRentals().size()) ;
-			for ( Rental rental: foundCustomer.getRentals() ) {
-				System.out.print("\tTitle: " + rental.getVideo().getTitle() + " ") ;
-				System.out.print("\tPrice Code: " + rental.getVideo().getPriceCode()) ;
-			}
-			// ## command
-			List<Rental> rentals = new ArrayList<Rental>() ;
-			foundCustomer.setRentals(rentals);
+			print(vrManager.clearRentals(foundCustomer));
 		}
 	}
 
+
+	private void print(String message) {
+		System.out.print(message);
+	}
 	public void returnVideo() {
-		System.out.println("Enter customer name: ") ;
+		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 
 		Customer foundCustomer = vrManager.findCustomer(customerName) ;
 		if ( foundCustomer == null ) return ;
 
-		System.out.println("Enter video title to return: ") ;
+		println("Enter video title to return: ") ;
 		String videoTitle = scanner.next() ;
 
 		vrManager.returnVideo(foundCustomer, videoTitle);
 	}
 
 	public void listVideos(List<Video> videos ) {
-		System.out.println("List of videos");
+		println("List of videos");
 
 		for ( Video video: videos ) {
-			System.out.println("Price code: " + video.getPriceCode() +"\tTitle: " + video.getTitle()) ;
+			println("Price code: " + video.getPriceCode() +"\tTitle: " + video.getTitle()) ;
 		}
-		System.out.println("End of list");
+		println("End of list");
 	}
 
 	public void listCustomers(List<Customer> customers) {
-		System.out.println("List of customers");
+		println("List of customers");
 		for ( Customer customer: customers ) {
-			System.out.println("Name: " + customer.getName() +
+			println("Name: " + customer.getName() +
 					"\tRentals: " + customer.getRentals().size()) ;
 			for ( Rental rental: customer.getRentals() ) {
 				System.out.print("\tTitle: " + rental.getVideo().getTitle() + " ") ;
 				System.out.print("\tPrice Code: " + rental.getVideo().getPriceCode()) ;
 			}
 		}
-		System.out.println("End of list");
+		println("End of list");
 	}
 
 	// ## delegate
 	public void getCustomerReport() {
-		System.out.println("Enter customer name: ") ;
+		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
-
-		Customer foundCustomer = vrManager.findCustomer(customerName) ;
-		if ( foundCustomer == null ) {
-			System.out.println("No customer found") ;
-		} else {
-			String result = foundCustomer.getReport() ;
-			System.out.println(result);
-		}
+		println(vrManager.getReport(customerName)) ;
 	}
+
+	private void println(String message) {
+		System.out.println(message);
+	}
+	
 
 	// ## wrong method
 	public void rentVideo() {
-		System.out.println("Enter customer name: ") ;
+		println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
 
 		Customer foundCustomer = vrManager.findCustomer(customerName);
 		if ( foundCustomer == null ) return ;
 
-		System.out.println("Enter video title to rent: ") ;
+		println("Enter video title to rent: ") ;
 		String videoTitle = scanner.next() ;
 		Video foundVideo = vrManager.findVideo(videoTitle);
 		if ( foundVideo == null ) return ;
@@ -132,18 +154,18 @@ public class VRUI {
 	// ## SRP 위반 registerCustomer, registerVideo
 	public void register(String object) {
 		if ( object.equals("customer") ) {
-			System.out.println("Enter customer name: ") ;
+			println("Enter customer name: ") ;
 			String name = scanner.next();
 			vrManager.registerCustomer(name);
 		}
 		else {
-			System.out.println("Enter video title to register: ") ;
+			println("Enter video title to register: ") ;
 			String title = scanner.next() ;
 
-			System.out.println("Enter video type( 1 for VHD, 2 for CD, 3 for DVD ):") ;
+			println("Enter video type( 1 for VHD, 2 for CD, 3 for DVD ):") ;
 			int videoType = scanner.nextInt();
 
-			System.out.println("Enter price code( 1 for Regular, 2 for New Release ):") ;
+			println("Enter price code( 1 for Regular, 2 for New Release ):") ;
 			int priceCode = scanner.nextInt();
 
 			vrManager.registerVideo(title, videoType, priceCode);
@@ -152,16 +174,16 @@ public class VRUI {
 
 	// ## SRP? 일수도 있다 priority 낮음
 	public int showCommand() {
-		System.out.println("\nSelect a command !");
-		System.out.println("\t 0. Quit");
-		System.out.println("\t 1. List customers");
-		System.out.println("\t 2. List videos");
-		System.out.println("\t 3. Register customer");
-		System.out.println("\t 4. Register video");
-		System.out.println("\t 5. Rent video");
-		System.out.println("\t 6. Return video");
-		System.out.println("\t 7. Show customer report");
-		System.out.println("\t 8. Show customer and clear rentals");
+		println("\nSelect a command !");
+		println("\t 0. Quit");
+		println("\t 1. List customers");
+		println("\t 2. List videos");
+		println("\t 3. Register customer");
+		println("\t 4. Register video");
+		println("\t 5. Rent video");
+		println("\t 6. Return video");
+		println("\t 7. Show customer report");
+		println("\t 8. Show customer and clear rentals");
 
 		int command = scanner.nextInt() ;
 
