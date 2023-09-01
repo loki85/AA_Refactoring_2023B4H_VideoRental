@@ -2,10 +2,6 @@ import javax.management.InvalidAttributeValueException;
 import java.security.InvalidParameterException;
 import java.util.Date;
 
-public enum RentalStatus {
-	RENTED, RETURNED
-}
-
 public class Rental {
 	//Remove Magic number
 	public static final int MAX_RENTAL_DAYS = 2;
@@ -45,7 +41,7 @@ public class Rental {
 
 	// ## Feature envy / SRP(date/video)
 	public int getDaysRentedLimit() {
-		int limit = 0;
+		int limit = getVideoRentLimit(this.video);
 		int daysRented;
 		if (getStatus() == RentalStatus.RETURNED) { // returned Video
 			daysRented = getDaysRented(returnDate.getTime() - rentDate.getTime());
@@ -53,14 +49,13 @@ public class Rental {
 			daysRented = getDaysRented(new Date().getTime() - rentDate.getTime());
 		}
 		if ( daysRented <= MAX_RENTAL_DAYS) return limit ;
-
-		limit = getVideoRentLimit(this.video);
 		return limit;
 	}
 
 	//todo move this function to video
 	private int getVideoRentLimit(Video v) {
 		// ## todo: type code 함께 정리
+		int limit=0;
 		switch ( video.getVideoType() ) {
 			case Video.VHS: limit = 5 ; break ;
 			case Video.CD: limit = 3 ; break ;

@@ -51,7 +51,7 @@ public class Customer {
 			int daysRented = 0;
 
 			// ## Duplication
-			if (each.getStatus() == 1) { // returned Video
+			if (each.getStatus() == RentalStatus.RENTED) { // returned Video
 				long diff = each.getReturnDate().getTime() - each.getRentDate().getTime();
 				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
 			} else { // not yet returned
