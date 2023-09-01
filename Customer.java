@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//refactor starts here. ## indicates coursework comment
+
 public class Customer {
 	private String name;
 
@@ -32,7 +34,10 @@ public class Customer {
 
 	}
 
+	// ## Long method (SRP) Feature Envy / Divergent Change
+	// ## method object (report 분리): 는 아직은.
 	public String getReport() {
+		//## SRP 계산도 하고 display도 함
 		String result = "Customer Report for " + getName() + "\n";
 
 		List<Rental> rentals = getRentals();
@@ -45,6 +50,7 @@ public class Customer {
 			int eachPoint = 0 ;
 			int daysRented = 0;
 
+			// ## Duplication
 			if (each.getStatus() == 1) { // returned Video
 				long diff = each.getReturnDate().getTime() - each.getRentDate().getTime();
 				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
@@ -53,9 +59,11 @@ public class Customer {
 				daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
 			}
 
+			// ## Type Code 엮어서
 			switch (each.getVideo().getPriceCode()) {
 			case Video.REGULAR:
 				eachCharge += 2;
+				// ## Magic number
 				if (daysRented > 2)
 					eachCharge += (daysRented - 2) * 1.5;
 				break;
@@ -65,7 +73,7 @@ public class Customer {
 			}
 
 			eachPoint++;
-
+			// ## each가 rental. feature envy
 			if ((each.getVideo().getPriceCode() == Video.NEW_RELEASE) )
 				eachPoint++;
 
@@ -75,6 +83,8 @@ public class Customer {
 			result += "\t" + each.getVideo().getTitle() + "\tDays rented: " + daysRented + "\tCharge: " + eachCharge
 					+ "\tPoint: " + eachPoint + "\n";
 
+			// ## 선택. Charge-point 분할
+
 			totalCharge += eachCharge;
 
 			totalPoint += eachPoint ;
@@ -82,7 +92,7 @@ public class Customer {
 
 		result += "Total charge: " + totalCharge + "\tTotal Point:" + totalPoint + "\n";
 
-
+		// ## 선택. duplication 
 		if ( totalPoint >= 10 ) {
 			System.out.println("Congrat! You earned one free coupon");
 		}
