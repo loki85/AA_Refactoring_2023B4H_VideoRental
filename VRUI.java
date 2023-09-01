@@ -3,10 +3,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-//refactor starts here
+//refactor starts here. ## indicates coursework comment
 
 public class VRUI {
 	private static Scanner scanner = new Scanner(System.in) ;
+
+	// ## domain-presentation 섞여 있음 (분리하거나 MVC하거나...)
+	// ## UI Presentation 먼저 하기
+	// ## Large Class (SRP) <-- 
 
 	private List<Customer> customers = new ArrayList<Customer>() ;
 
@@ -16,6 +20,8 @@ public class VRUI {
 		VRUI ui = new VRUI() ;
 
 		boolean quit = false ;
+		// ## command enum
+		// ## command pattern은 too much
 		while ( ! quit ) {
 			int command = ui.showCommand() ;
 			switch ( command ) {
@@ -38,7 +44,7 @@ public class VRUI {
 	public void clearRentals() {
 		System.out.println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
-
+		// ## Duplication
 		Customer foundCustomer = null ;
 		for ( Customer customer: customers ) {
 			if ( customer.getName().equals(customerName)) {
@@ -50,13 +56,15 @@ public class VRUI {
 		if ( foundCustomer == null ) {
 			System.out.println("No customer found") ;
 		} else {
+			// ## CQRS
+			// ## query
 			System.out.println("Name: " + foundCustomer.getName() +
 					"\tRentals: " + foundCustomer.getRentals().size()) ;
 			for ( Rental rental: foundCustomer.getRentals() ) {
 				System.out.print("\tTitle: " + rental.getVideo().getTitle() + " ") ;
 				System.out.print("\tPrice Code: " + rental.getVideo().getPriceCode()) ;
 			}
-
+			// ## command
 			List<Rental> rentals = new ArrayList<Rental>() ;
 			foundCustomer.setRentals(rentals);
 		}
@@ -80,6 +88,7 @@ public class VRUI {
 
 		List<Rental> customerRentals = foundCustomer.getRentals() ;
 		for ( Rental rental: customerRentals ) {
+			// ## message chain? > introduce delegation, explaining variable
 			if ( rental.getVideo().getTitle().equals(videoTitle) && rental.getVideo().isRented() ) {
 				rental.returnVideo();
 				rental.getVideo().setRented(false);
@@ -128,6 +137,7 @@ public class VRUI {
 		System.out.println("End of list");
 	}
 
+	// ## delegate
 	public void getCustomerReport() {
 		System.out.println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
@@ -148,6 +158,7 @@ public class VRUI {
 		}
 	}
 
+	// ## wrong method
 	public void rentVideo() {
 		System.out.println("Enter customer name: ") ;
 		String customerName = scanner.next() ;
@@ -178,11 +189,13 @@ public class VRUI {
 		Rental rental = new Rental(foundVideo) ;
 		foundVideo.setRented(true);
 
+		// ## encapsulate collenction (priority:low)
 		List<Rental> customerRentals = foundCustomer.getRentals() ;
 		customerRentals.add(rental);
 		foundCustomer.setRentals(customerRentals);
 	}
 
+	// ## SRP 위반 registerCustomer, registerVideo
 	public void register(String object) {
 		if ( object.equals("customer") ) {
 			System.out.println("Enter customer name: ") ;
@@ -206,6 +219,7 @@ public class VRUI {
 		}
 	}
 
+	// ## SRP? 일수도 있다 priority 낮음
 	public int showCommand() {
 		System.out.println("\nSelect a command !");
 		System.out.println("\t 0. Quit");
